@@ -30,6 +30,9 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
                     
                     // Create an empty table.
                     Table table = new Table();
+                    
+ 
+
 
                     // Create a TableProperties object and specify its border information.
                     TableProperties tblProp = new TableProperties(
@@ -76,44 +79,52 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
                     // Append the TableProperties object to the empty table.
                     table.AppendChild<TableProperties>(tblProp);
 
-                    for (int i = 0; i < 3; i++)
+
+                    // Create a row.
+                    TableRow tr = new TableRow();
+                    tr.Append(CreateCell("Title"));
+                    tr.Append(CreateCell("Author"));
+                    tr.Append(CreateCell("Price"));
+                    tr.Append(CreateCell("Best Seller"));
+                    tr.Append(CreateCell("Availability"));
+                    table.Append(tr);
+
+                    foreach (var book in bookList)
                     {
-                        // Create a row.
-                        TableRow tr = new TableRow();
+                        tr = new TableRow();
+
+                        
 
                         // Create a cell.
-                        TableCell tc1 = new TableCell();
+                        //TableCell tc1 = new TableCell();
+                        TableRow theadRow = new TableRow();
+                        TableCell titleCell = new TableCell();
+                        TableCell authorCell = new TableCell();
+                        TableCell priceCell = new TableCell();
+                        TableCell bestSellerCell = new TableCell();
+                        TableCell availabilityCell = new TableCell();
 
                         // Specify the width property of the table cell.
-                        tc1.Append(new TableCellProperties(
-                            new TableCellWidth() {Type = TableWidthUnitValues.Auto, Width = "5000"}));
+//                        tc1.Append(new TableCellProperties(
+//                            new TableCellWidth() {Type = TableWidthUnitValues.Auto, Width = "5000"}));
 
                         // Specify the table cell content.
-                        tc1.Append(new Paragraph(new Run(new Text("some text what the hell is this?"))));
+                        tr.Append(CreateCell(book.Title));
+ 
+                        tr.Append(CreateCell(book.Author.Firstname + " " + book.Author.Lastname));
 
-                        // Append the table cell to the table row.
-                        tr.Append(tc1);
-
-//                    // Create a second table cell by copying the OuterXml value of the first table cell.
-//                    TableCell tc2 = new TableCell(tc1.OuterXml);
-//
-//                    // Append the table cell to the table row.
-//                    tr.Append(tc2);
+                        tr.Append(CreateCell(string.Format("€{0:C}", book.Price)));
+                      
+                        tr.Append(CreateCell(book.IsBestSeller ? "Bestseller" : "Not Bestseller"));
+                        
+                        tr.Append(CreateCell(book.AvailableStock >0 ? "Available in stock( "+book.AvailableStock+" )":"Not available in stock"));
 
                         // Append the table row to the table.
                         table.Append(tr);
                     }
-
-
-                    
                     body.Append(table);
-
                     doc.Append(body);
-
-                    
                     wordDoc.MainDocumentPart.Document = doc;
-                   
-
                     wordDoc.Close();
                 }
 
@@ -126,6 +137,11 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
         {
             //@TODO
             //Madafa.CreatePdf();
+        }
+        
+        private static TableCell CreateCell(string text)
+        {
+            return new TableCell(new Paragraph(new Run(new Text(text))));
         }
     }
 }

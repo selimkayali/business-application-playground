@@ -24,11 +24,12 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
         public IEnumerable<BookDto> Get(int? beforeThisYear,int? afterThisYear,int? authorId,bool? isBestSeller )
         {
 
-            var bookList = _bookRepository.Get(book =>
-                (authorId == null || book.Author.Id == authorId)&&
-                                                      (beforeThisYear == null || book.PublicationYear<=beforeThisYear)&&
-                                                      (afterThisYear == null || book.PublicationYear>=afterThisYear)&&
-                (book.IsBestSeller==isBestSeller));
+//            var bookList = _bookRepository.Get(book =>
+//                (authorId == null || book.Author.Id == authorId)&&
+//                                                      (beforeThisYear == null || book.PublicationYear<=beforeThisYear)&&
+//                                                      (afterThisYear == null || book.PublicationYear>=afterThisYear)&&
+//                (book.IsBestSeller==isBestSeller));
+            var bookList = _bookRepository.Get(s=>s.IsBestSeller || !s.IsBestSeller);
           return _mapper.Map<IEnumerable<Book>,List<BookDto>>(bookList);
         }
     }
