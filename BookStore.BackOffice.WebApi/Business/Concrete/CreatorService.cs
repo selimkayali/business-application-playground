@@ -152,16 +152,16 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
             var paragraph = new Paragraph(new Run(new Text(text)));
             ParagraphProperties paragraphProperties = new ParagraphProperties();
             TableCellProperties cellProperties = new TableCellProperties();
-            cellProperties.AppendChild<TableCellVerticalAlignment>(new TableCellVerticalAlignment(){Val = TableVerticalAlignmentValues.Center});
-            cellProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Center});
+            cellProperties.AppendChild(new TableCellVerticalAlignment(){Val = TableVerticalAlignmentValues.Center});
+            cellProperties.AppendChild(new Justification() {Val = JustificationValues.Center});
 
-            TableCellWidth tcW = new TableCellWidth() { Type = TableWidthUnitValues.Auto };
+            TableCellWidth cellWidth = new TableCellWidth() { Type = TableWidthUnitValues.Auto };
             if(isThead.HasValue && isThead.Value)
-                paragraphProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Center});
+                paragraphProperties.AppendChild(new Justification() {Val = JustificationValues.Center});
             else
-                paragraphProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Left});
-            paragraphProperties.AppendChild<TextAlignment>(new TextAlignment() {Val = VerticalTextAlignmentValues.Center});
-            cell.AppendChild(tcW);
+                paragraphProperties.AppendChild(new Justification() {Val = JustificationValues.Left});
+            paragraphProperties.AppendChild(new TextAlignment() {Val = VerticalTextAlignmentValues.Center});
+            cell.AppendChild(cellWidth);
             cell.AppendChild(cellProperties);
             cell.AppendChild(paragraphProperties);
             cell.AppendChild(paragraph);

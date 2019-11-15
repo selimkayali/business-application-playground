@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStore.BackOffice.WebApi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.BackOffice.Tests", "BookStore.BackOffice.Tests\BookStore.BackOffice.Tests.csproj", "{36A6187A-FBF3-42EF-9E81-41231CABD721}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStore.BackOffice.OpenXml", "BookStore.BackOffice.OpenXml\BookStore.BackOffice.OpenXml.csproj", "{427C6973-3137-4BEF-B25C-B748668DA899}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{36A6187A-FBF3-42EF-9E81-41231CABD721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36A6187A-FBF3-42EF-9E81-41231CABD721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36A6187A-FBF3-42EF-9E81-41231CABD721}.Release|Any CPU.Build.0 = Release|Any CPU
-		{427C6973-3137-4BEF-B25C-B748668DA899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{427C6973-3137-4BEF-B25C-B748668DA899}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{427C6973-3137-4BEF-B25C-B748668DA899}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{427C6973-3137-4BEF-B25C-B748668DA899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
