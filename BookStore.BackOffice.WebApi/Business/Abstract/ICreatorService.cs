@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using BookStore.BackOffice.WebApi.Dto;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.BackOffice.WebApi.Business.Abstract
 {
     public interface ICreatorService
     {
-        void CreateWord(IEnumerable<BookDto> bookList);
-        void CreatePdf(IEnumerable<BookDto> bookList);
+        FileStreamResult CreateWord(IEnumerable<BookDto> bookList);
+        FileStreamResult CreatePdf(IEnumerable<BookDto> bookList);
     }
 }

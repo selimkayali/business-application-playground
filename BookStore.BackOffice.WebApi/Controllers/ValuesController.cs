@@ -23,25 +23,18 @@ namespace BookStore.BackOffice.WebApi.Controllers
         }
         // GET api/values
         [HttpGet]
-        public IEnumerable<BookDto> Get([FromQuery]int? beforeThisYear,int? afterThisYear,int? authorId,bool? isBestSeller=false)
+        public FileStreamResult Get([FromQuery]int? beforeThisYear,int? afterThisYear,int? authorId,bool? isBestSeller=false)
         {
-                var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                Directory.CreateDirectory(Environment.SpecialFolder.Desktop + "/asd").Create();
-//                Madafa.CreateWordprocessingDocument(appDataDir+"/asd");
-//Madafa.Asd();
-
-
-                
-            if (string.IsNullOrEmpty(Request.QueryString.Value)) return new List<BookDto>();
+            if (string.IsNullOrEmpty(Request.QueryString.Value)) return null;
             var dictionary = Request.QueryString.Value.Replace("?", "").Split('&')
                 .ToDictionary(x => x.Split('=')[0], x => x.Split('=')[1]).Where(s=>!string.IsNullOrEmpty(s.Value));
             if (dictionary.Any())
             {
                 var ls = _bookService.Get(beforeThisYear,afterThisYear,authorId,isBestSeller);
-                _creatorService.CreateWord(ls);
-                return ls;
+               return _creatorService.CreateWord(ls);
+               
             }
-            return new List<BookDto>();
+            return null;
         }
 
 //        // GET api/values/5
