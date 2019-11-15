@@ -28,13 +28,9 @@ namespace BookStore.BackOffice.WebApi.Controllers
             if (string.IsNullOrEmpty(Request.QueryString.Value)) return null;
             var dictionary = Request.QueryString.Value.Replace("?", "").Split('&')
                 .ToDictionary(x => x.Split('=')[0], x => x.Split('=')[1]).Where(s=>!string.IsNullOrEmpty(s.Value));
-            if (dictionary.Any())
-            {
-                var ls = _bookService.Get(beforeThisYear,afterThisYear,authorId,isBestSeller);
-               return _creatorService.CreateWord(ls);
-               
-            }
-            return null;
+            if (!dictionary.Any()) return null;
+            var ls = _bookService.Get(beforeThisYear,afterThisYear,authorId,isBestSeller);
+            return _creatorService.CreateWord(ls);
         }
 
 //        // GET api/values/5

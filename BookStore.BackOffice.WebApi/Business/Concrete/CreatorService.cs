@@ -1,12 +1,32 @@
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using BookStore.BackOffice.WebApi.Business.Abstract;
 using BookStore.BackOffice.WebApi.Dto;
 using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
+using BottomBorder = DocumentFormat.OpenXml.Wordprocessing.BottomBorder;
+using InsideHorizontalBorder = DocumentFormat.OpenXml.Wordprocessing.InsideHorizontalBorder;
+using InsideVerticalBorder = DocumentFormat.OpenXml.Wordprocessing.InsideVerticalBorder;
+using LeftBorder = DocumentFormat.OpenXml.Wordprocessing.LeftBorder;
+using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
+using ParagraphProperties = DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties;
+using RightBorder = DocumentFormat.OpenXml.Wordprocessing.RightBorder;
+using Run = DocumentFormat.OpenXml.Wordprocessing.Run;
+using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
+using TableCell = DocumentFormat.OpenXml.Wordprocessing.TableCell;
+using TableCellProperties = DocumentFormat.OpenXml.Drawing.TableCellProperties;
+using TableProperties = DocumentFormat.OpenXml.Wordprocessing.TableProperties;
+using TableRow = DocumentFormat.OpenXml.Wordprocessing.TableRow;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+using TopBorder = DocumentFormat.OpenXml.Wordprocessing.TopBorder;
+using VerticalTextAlignment = DocumentFormat.OpenXml.Wordprocessing.VerticalTextAlignment;
 
 namespace BookStore.BackOffice.WebApi.Business.Concrete
 {
@@ -16,9 +36,8 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
 
         public FileStreamResult CreateWord(IEnumerable<BookDto> bookList)
         {
-//            Creator.CreateWord(bookList);
-
-
+            var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+            culture.NumberFormat.CurrencySymbol = "€"; 
             using (MemoryStream mem = new MemoryStream())
             {
                 using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(mem,
@@ -37,23 +56,23 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
 
                     // Create row for title.
                     TableRow tr = new TableRow();
-                    tr.Append(CreateCell("Title"));
-                    tr.Append(CreateCell("Author"));
-                    tr.Append(CreateCell("Price"));
-                    tr.Append(CreateCell("Best Seller"));
-                    tr.Append(CreateCell("Availability"));
+                    tr.Append(CreateCell("Title",true));
+                    tr.Append(CreateCell("Author",true));
+                    tr.Append(CreateCell("Price",true));
+                    tr.Append(CreateCell("Best Seller",true));
+                    tr.Append(CreateCell("Availability",true));
                     table.Append(tr);
 
                     foreach (var book in bookList)
                     {
                         tr = new TableRow();
 
-                        // Specify the table cell content.
+                        // create data cells.
                         tr.Append(CreateCell(book.Title));
 
                         tr.Append(CreateCell(book.Author.Firstname + " " + book.Author.Lastname));
 
-                        tr.Append(CreateCell(string.Format("€{0:C}", book.Price)));
+                        tr.Append(CreateCell(book.Price.ToString("C", culture)));
 
                         tr.Append(CreateCell(book.IsBestSeller ? "Bestseller" : "Not Bestseller"));
 
@@ -79,13 +98,12 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
         public FileStreamResult CreatePdf(IEnumerable<BookDto> bookList)
         {
             //@TODO
-            //Madafa.CreatePdf();
             return null;
         }
 
         public TableProperties CreateTableProperties()
         {
-            // Create a TableProperties object and specify its border information.
+            // create properties for table borders.
             return new TableProperties(
                 new TableBorders(
                     new TopBorder()
@@ -128,14 +146,25 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
             );
         }
 
-        private static TableCell CreateCell(string text)
+        private static TableCell CreateCell(string text, bool? isThead=false)
         {
             var cell = new TableCell();
             var paragraph = new Paragraph(new Run(new Text(text)));
             ParagraphProperties paragraphProperties = new ParagraphProperties();
-            paragraphProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Center});
-            cell.AppendChild<ParagraphProperties>(paragraphProperties);
-            cell.AppendChild<Paragraph>(paragraph);
+            TableCellProperties cellProperties = new TableCellProperties();
+            cellProperties.AppendChild<TableCellVerticalAlignment>(new TableCellVerticalAlignment(){Val = TableVerticalAlignmentValues.Center});
+            cellProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Center});
+
+            TableCellWidth tcW = new TableCellWidth() { Type = TableWidthUnitValues.Auto };
+            if(isThead.HasValue && isThead.Value)
+                paragraphProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Center});
+            else
+                paragraphProperties.AppendChild<Justification>(new Justification() {Val = JustificationValues.Left});
+            paragraphProperties.AppendChild<TextAlignment>(new TextAlignment() {Val = VerticalTextAlignmentValues.Center});
+            cell.AppendChild(tcW);
+            cell.AppendChild(cellProperties);
+            cell.AppendChild(paragraphProperties);
+            cell.AppendChild(paragraph);
             return cell;
         }
     }
