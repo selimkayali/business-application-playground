@@ -24,63 +24,17 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
                     WordprocessingDocumentType.Document, true))
                 {
                     wordDoc.AddMainDocumentPart();
-                    // siga a ordem
                     Document doc = new Document();
                     Body body = new Body();
                     
                     // Create an empty table.
                     Table table = new Table();
                     
- 
-
-
-                    // Create a TableProperties object and specify its border information.
-                    TableProperties tblProp = new TableProperties(
-                        new TableBorders(
-                            new TopBorder()
-                            {
-                                Val =
-                                    new EnumValue<BorderValues>(BorderValues.Dashed),
-                                Size = 15
-                            },
-                            new BottomBorder()
-                            {
-                                Val =
-                                    new EnumValue<BorderValues>(BorderValues.Dashed),
-                                Size = 15
-                            },
-                            new LeftBorder()
-                            {
-                                Val =
-                                    new EnumValue<BorderValues>(BorderValues.Dashed),
-                                Size = 15
-                            },
-                            new RightBorder()
-                            {
-                                Val =
-                                    new EnumValue<BorderValues>(BorderValues.Dashed),
-                                Size = 15
-                            },
-                            new InsideHorizontalBorder()
-                            {
-                                Val =
-                                    new EnumValue<BorderValues>(BorderValues.Dashed),
-                                Size = 15
-                            },
-                            new InsideVerticalBorder()
-                            {
-                                Val =
-                                    new EnumValue<BorderValues>(BorderValues.Dashed),
-                                Size = 15
-                            }
-                        )
-                    );
-
                     // Append the TableProperties object to the empty table.
-                    table.AppendChild<TableProperties>(tblProp);
+                    table.AppendChild<TableProperties>(CreateTableProperties());
 
 
-                    // Create a row.
+                    // Create row for title.
                     TableRow tr = new TableRow();
                     tr.Append(CreateCell("Title"));
                     tr.Append(CreateCell("Author"));
@@ -92,22 +46,7 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
                     foreach (var book in bookList)
                     {
                         tr = new TableRow();
-
                         
-
-                        // Create a cell.
-                        //TableCell tc1 = new TableCell();
-                        TableRow theadRow = new TableRow();
-                        TableCell titleCell = new TableCell();
-                        TableCell authorCell = new TableCell();
-                        TableCell priceCell = new TableCell();
-                        TableCell bestSellerCell = new TableCell();
-                        TableCell availabilityCell = new TableCell();
-
-                        // Specify the width property of the table cell.
-//                        tc1.Append(new TableCellProperties(
-//                            new TableCellWidth() {Type = TableWidthUnitValues.Auto, Width = "5000"}));
-
                         // Specify the table cell content.
                         tr.Append(CreateCell(book.Title));
  
@@ -117,7 +56,7 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
                       
                         tr.Append(CreateCell(book.IsBestSeller ? "Bestseller" : "Not Bestseller"));
                         
-                        tr.Append(CreateCell(book.AvailableStock >0 ? "Available in stock( "+book.AvailableStock+" )":"Not available in stock"));
+                        tr.Append(CreateCell(book.AvailableStock >0 ? "Available in stock\n("+book.AvailableStock+")":"Not available in stock"));
 
                         // Append the table row to the table.
                         table.Append(tr);
@@ -137,6 +76,51 @@ namespace BookStore.BackOffice.WebApi.Business.Concrete
         {
             //@TODO
             //Madafa.CreatePdf();
+        }
+
+        public TableProperties CreateTableProperties()
+        {
+            // Create a TableProperties object and specify its border information.
+            return  new TableProperties(
+                new TableBorders(
+                    new TopBorder()
+                    {
+                        Val =
+                            new EnumValue<BorderValues>(BorderValues.Single),
+                        Size = 5
+                    },
+                    new BottomBorder()
+                    {
+                        Val =
+                            new EnumValue<BorderValues>(BorderValues.Single),
+                        Size = 5
+                    },
+                    new LeftBorder()
+                    {
+                        Val =
+                            new EnumValue<BorderValues>(BorderValues.Single),
+                        Size = 5
+                    },
+                    new RightBorder()
+                    {
+                        Val =
+                            new EnumValue<BorderValues>(BorderValues.Single),
+                        Size = 5
+                    },
+                    new InsideHorizontalBorder()
+                    {
+                        Val =
+                            new EnumValue<BorderValues>(BorderValues.Single),
+                        Size = 5
+                    },
+                    new InsideVerticalBorder()
+                    {
+                        Val =
+                            new EnumValue<BorderValues>(BorderValues.Single),
+                        Size = 5
+                    }
+                )
+            );
         }
         
         private static TableCell CreateCell(string text)
