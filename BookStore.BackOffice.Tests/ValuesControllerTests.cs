@@ -77,7 +77,7 @@ namespace BookStore.BackOffice.Tests
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["test"] = "test"; // For Create a Request
             if (addQuerystring)
-                httpContext.Request.QueryString = new QueryString("?isBestSeller=true");
+                httpContext.Request.QueryString = new QueryString("?isBestSeller=true");  // Added for pass  Request.QueryString
             var controllerContext = new ControllerContext()
             {
                 HttpContext = httpContext,
