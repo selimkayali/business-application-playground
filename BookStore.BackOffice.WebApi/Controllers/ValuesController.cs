@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using BookStore.BackOffice.WebApi.Business.Abstract;
 using BookStore.BackOffice.WebApi.Business.Concrete;
@@ -24,10 +25,10 @@ namespace BookStore.BackOffice.WebApi.Controllers
             bool? isBestSeller, int docType = 1)
         {
             if (string.IsNullOrEmpty(Request.QueryString.Value))
-                throw new FileNotFoundException("You should provide at least one query parameter");
+                throw new ArgumentNullException("QueryParams","You should provide at least one query parameter");
             var dictionary = Request.QueryString.Value.Replace("?", "").Split('&')
                 .ToDictionary(x => x.Split('=')[0], x => x.Split('=')[1]).Where(s => !string.IsNullOrEmpty(s.Value));
-            if (!dictionary.Any()) return null;
+            if (!dictionary.Any())  throw new ArgumentNullException("QueryParams","You should provide at least one query parameter");;
             var ls = _bookService.Get(beforeThisYear, afterThisYear, authorId, isBestSeller);
             switch (docType)
             {
@@ -39,7 +40,7 @@ namespace BookStore.BackOffice.WebApi.Controllers
                     ICreatorService pdfReportCreator = new PdfReportCreator();
                     return pdfReportCreator.CreateReport(ls);
                 default:
-                    return null;
+                    throw new InvalidOperationException("Select a valid document type for creating report");
             }
         }
 

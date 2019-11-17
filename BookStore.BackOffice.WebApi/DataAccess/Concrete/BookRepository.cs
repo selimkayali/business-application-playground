@@ -10,12 +10,10 @@ namespace BookStore.BackOffice.WebApi.DataAccess.Concrete
     
     public class BookRepository:IBookRepository
     {
-        private readonly BookStoreDbContext _dbContext;
         private readonly DbSet<Book> _dbSet;
         public BookRepository(BookStoreDbContext dbContext)
         {
-            _dbContext = dbContext;
-            this._dbSet = _dbContext.Set<Book>();
+            this._dbSet = dbContext.Set<Book>();
         }
         public IQueryable<Book> Get(Expression<Func<Book, bool>> predicate)
         {
